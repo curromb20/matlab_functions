@@ -1,0 +1,47 @@
+% A small matlab script to study the theoretic values of the birthday problem
+% While at the same time simulating a MC model to see it.
+% MC has 10.000 iterations now, but it can be changed. It takes around a minute and a half.
+
+%% MC Birthdays
+days=365;
+iter=100000;
+
+lista_d=zeros(1,365); % Values observed in the MC analysis
+lista_d_teo=zeros(1,365); % Theoretical Values
+a=1;
+
+for d=2:days
+
+
+    suma_d=0;
+    for i=1:iter
+    v=randi(days,[1 d]);
+    si=d~=size(unique(v),2);
+    suma_d=suma_d+si;
+
+    end
+    lista_d(d)=suma_d/iter;
+    
+    a=a*(days-d+1)/days;
+    valor_teo=1-(a);
+    lista_d_teo(d)=valor_teo;
+
+end
+
+dif=(lista_d-lista_d_teo)./lista_d_teo;
+dif(1)=0;
+plot(dif)
+ylim([-0.125 0.125])
+
+% Vnk = n! / (n-k)!
+% VTk = n^k
+% Ak = Vnk/VTk
+% P = 1 -(Ak)
+% n=365;
+% k=1 V365,1= 365! / 364! = 365
+%     VT1 = 365^1 = 365
+%       A = 365 / 365 =1
+%      P = 1-1=0
+% k=2 V365,2= 365! / 363! = 365 * 364
+%     VT2 =365^2 
+%       A = 365*364 / 365*365
